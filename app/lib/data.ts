@@ -39,10 +39,20 @@ export async function fetchLatestInvoices() {
       ORDER BY invoices.date DESC
       LIMIT 5`;
 
-    const latestInvoices = data.map((invoice) => ({
-      ...invoice,
-      amount: formatCurrency(invoice.amount),
-    }));
+    interface LatestInvoice {
+      id: string;
+      name: string;
+      image_url: string;
+      email: string;
+      amount: string;
+    }
+
+    const latestInvoices: LatestInvoice[] = data.map(
+      (invoice: LatestInvoice) => ({
+        ...invoice,
+        amount: formatCurrency(+invoice.amount),
+      })
+    );
     return latestInvoices;
   } catch (error) {
     console.error('Database Error:', error);
@@ -88,7 +98,7 @@ export async function fetchCardData() {
 const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredInvoices(
   query: string,
-  currentPage: number,
+  currentPage: number
 ) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
